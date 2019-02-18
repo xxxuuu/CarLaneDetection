@@ -44,7 +44,8 @@ def hough_lines(img, rho, theta, threshold, min_line_len, max_line_gap):
                             maxLineGap=max_line_gap)
     line_img = np.zeros((img.shape[0], img.shape[1], 3), dtype=np.uint8)
     # draw_lines(line_img, lines)
-    draw_lanes(line_img, lines)
+    if lines is not None:
+        draw_lanes(line_img, lines)
     return line_img
 
 
@@ -137,7 +138,24 @@ def process_an_image(img):
 # img = mplimg.imread("../resources/lane.jpg")
 # process_an_image(img)
 
-output = '../resources/video_1_sol.mp4'
-clip = VideoFileClip("../resources/video_1.mp4")
+# 对视频的识别
+'''
+output = '../resources/project_video_out.mp4'
+clip = VideoFileClip("../resources/project_video.mp4")
 out_clip = clip.fl_image(process_an_image)
 out_clip.write_videofile(output, audio=False)
+'''
+
+# 使用摄像头识别
+cap = cv2.VideoCapture(0)
+while(True):
+    ret, frame = cap.read()
+    if cv2.waitKey(1)==27: # ESC键
+        break
+    #try:
+    cv2.imshow("capture", process_an_image(frame))
+    #except Exception as e:
+    #    print(repr(e))
+    
+cap.release()
+cv2.destroyAllWindows()
